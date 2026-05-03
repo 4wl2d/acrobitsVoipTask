@@ -1,0 +1,10 @@
+## Copy these keys to ignored local.properties or ~/.gradle/gradle.properties.
+## Do not commit real license values or SIP passwords.
+sdk.dir=/path/to/android/sdk
+acrobitsMavenUsername=net.acrobits.interview.test.android
+acrobitsMavenPassword=<license-key>
+acrobitsLicenseKey=<license-key>
+
+## Optional runtime form prefill values for local QA.
+defaultSipUsername=<sip-username>
+defaultSipPassword=<sip-password>
