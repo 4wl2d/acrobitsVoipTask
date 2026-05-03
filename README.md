@@ -28,6 +28,16 @@ adb devices
 ./gradlew :feature:calling:connectedDebugAndroidTest --no-daemon
 ```
 
+If a physical device was used for manual testing before running the connected
+tests, wake/unlock it and stop the manually launched app first:
+
+```bash
+adb shell input keyevent KEYCODE_WAKEUP
+adb shell input swipe 500 1800 500 500 300
+adb shell am force-stop net.acrobits.interview.test.android
+./gradlew :feature:calling:connectedDebugAndroidTest --no-daemon --rerun-tasks
+```
+
 ## Architecture
 
 The app is organized as a small multi-module Android project:

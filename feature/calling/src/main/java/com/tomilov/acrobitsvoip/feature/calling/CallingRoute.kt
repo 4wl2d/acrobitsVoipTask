@@ -60,6 +60,22 @@ fun CallingRoute(
         return
     }
 
+    CallingRouteContent(
+        softphoneClient = softphoneClient,
+        voipConfig = voipConfig
+    )
+}
+
+/**
+ * Post-permission calling content used by [CallingRoute] and instrumentation tests.
+ *
+ * This is not a stable feature API; app code should keep using [CallingRoute].
+ */
+@Composable
+fun CallingRouteContent(
+    softphoneClient: SoftphoneClient,
+    voipConfig: VoipConfig
+) {
     val viewModel = viewModel<CallingViewModel>(
         factory = remember(softphoneClient, voipConfig) {
             CallingViewModel.Factory(
