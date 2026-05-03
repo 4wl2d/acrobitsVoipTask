@@ -1,11 +1,14 @@
 package com.tomilov.acrobitsvoip.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.tomilov.acrobitsvoip.BuildConfig
-import com.tomilov.acrobitsvoip.di.AppContainer
+import com.tomilov.acrobitsvoip.config.VoipConfig
+import com.tomilov.acrobitsvoip.di.AppServices
 import com.tomilov.acrobitsvoip.dialer.PhoneNumberValidation
 import com.tomilov.acrobitsvoip.dialer.PhoneNumberValidator
+import com.tomilov.acrobitsvoip.time.AppClock
+import com.tomilov.acrobitsvoip.time.SystemAppClock
 import com.tomilov.acrobitsvoip.voip.CallPlacementResult
 import com.tomilov.acrobitsvoip.voip.CallSession
 import com.tomilov.acrobitsvoip.voip.SipCredentials
@@ -19,13 +22,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class VoipViewModel(
-    private val softphoneClient: SoftphoneClient = AppContainer.services.softphoneClient
+    private val softphoneClient: SoftphoneClient,
+    private val voipConfig: VoipConfig,
+    private val clock: AppClock = SystemAppClock
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         VoipUiState(
-            sipUsername = BuildConfig.DEFAULT_SIP_USERNAME,
-            sipPassword = BuildConfig.DEFAULT_SIP_PASSWORD
+            sipUsername = voipConfig.defaultSipUsername,
+            sipPassword = voipConfig.defaultSipPassword
         )
     )
     val uiState: StateFlow<VoipUiState> = _uiState.asStateFlow()
@@ -72,7 +77,7 @@ class VoipViewModel(
                 )
             )
         }.onSuccess {
-            _uiState.update { it.copy(message = "Registering ${current.sipUsername} on ${BuildConfig.SIP_HOST}.") }
+            _uiState.update { it.copy(message = "Registering ${current.sipUsername} on ${voipConfig.sipHost}.") }
         }.onFailure { error ->
             _uiState.update { it.copy(message = error.message ?: "SIP registration failed.") }
         }
@@ -147,7 +152,24 @@ class VoipViewModel(
 
     private fun formatCallDuration(call: CallSession?): String {
         val startedAtMillis = call?.startedAtMillis ?: return "00:00"
-        val elapsedSeconds = (System.currentTimeMillis() - startedAtMillis) / 1_000
+        val elapsedSeconds = (clock.currentTimeMillis() - startedAtMillis) / 1_000
         return CallDurationFormatter.format(elapsedSeconds)
+    }
+
+    class Factory(
+        private val services: AppServices,
+        private val clock: AppClock = SystemAppClock
+    ) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(VoipViewModel::class.java)) {
+                return VoipViewModel(
+                    softphoneClient = services.softphoneClient,
+                    voipConfig = services.voipConfig,
+                    clock = clock
+                ) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+        }
     }
 }

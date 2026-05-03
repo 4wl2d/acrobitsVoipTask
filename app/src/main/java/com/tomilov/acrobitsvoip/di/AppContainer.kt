@@ -1,6 +1,8 @@
 package com.tomilov.acrobitsvoip.di
 
 import android.app.Application
+import com.tomilov.acrobitsvoip.BuildConfig
+import com.tomilov.acrobitsvoip.config.VoipConfig
 import com.tomilov.acrobitsvoip.voip.AcrobitsSoftphoneClient
 import com.tomilov.acrobitsvoip.voip.SoftphoneClient
 
@@ -15,11 +17,17 @@ object AppContainer {
     fun initialize(application: Application) {
         if (initializedServices != null) return
         initializedServices = AppServices(
-            softphoneClient = AcrobitsSoftphoneClient(application)
+            softphoneClient = AcrobitsSoftphoneClient(application),
+            voipConfig = VoipConfig(
+                sipHost = BuildConfig.SIP_HOST,
+                defaultSipUsername = BuildConfig.DEFAULT_SIP_USERNAME,
+                defaultSipPassword = BuildConfig.DEFAULT_SIP_PASSWORD
+            )
         )
     }
 }
 
 data class AppServices(
-    val softphoneClient: SoftphoneClient
+    val softphoneClient: SoftphoneClient,
+    val voipConfig: VoipConfig
 )
