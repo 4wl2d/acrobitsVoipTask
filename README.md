@@ -197,8 +197,14 @@ CloudSoftphone on a second device.
 
 1. Install CloudSoftphone on the second device.
 2. Log into CloudSoftphone with the other assigned account using the Cloud ID
-   format from the assignment, for example `<assigned-username>@INTERVIEW`, and
-   the assigned password.
+   format from the assignment. The supplied interview task states
+   `<assigned-username>@INTERVIEW*`, including the trailing `*`. If a future
+   handout differs, follow the handout exactly. Acrobits' generic-app testing
+   FAQ distinguishes live Cloud IDs without an asterisk from editable/sandbox
+   testing with an asterisk (`https://faq.acrobits.net/how-do-i-test-the-application`
+   and `https://faq.acrobits.net/changes-in-the-editable-copy`), so do not
+   silently change this value unless the provided assignment text or evaluator
+   says to.
 3. Install and launch this app.
 4. Grant microphone permission on the welcome screen.
 5. Enter one assigned SIP username/password in the dialer, unless local prefill
@@ -229,11 +235,19 @@ returns the app to the dialer.
 
 ## Submission Safety
 
-Before publishing, verify the working tree does not contain assignment secrets:
+Before publishing, verify the working tree does not contain assignment secrets.
+Replace the placeholders locally with the exact values from the assignment; do
+not commit those values into this README:
 
 ```bash
 git status --short
-git grep -n -E '<real-sip-password>|<real-license-key>' -- ':!local.properties'
+git grep -n -E '<real-license-key>|<real-sip-password>|<real-sip-username-1>|<real-sip-username-2>' -- ':!local.properties'
+```
+
+Also scan all reachable Git history, not just `HEAD`. Expected output is empty:
+
+```bash
+git rev-list --all | xargs git grep -n -E '<real-license-key>|<real-sip-password>|<real-sip-username-1>|<real-sip-username-2>' -- ':!local.properties' || true
 ```
 
 The actual assignment SIP usernames and password should stay in the assignment
