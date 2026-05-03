@@ -13,6 +13,18 @@ Android project scaffold for the Acrobits VoIP task.
 ./gradlew build
 ```
 
+## Architecture
+
+The app is organized as a small multi-module Android project:
+
+- `:app` wires dependencies and owns launcher/application configuration.
+- `:feature:calling` contains the permission-gated calling flow, ViewModel, and Compose screens.
+- `:softphone:acrobits` contains the LibSoftphone implementation of the core `SoftphoneClient` contract.
+- `:core:voip` contains pure Kotlin contracts, models, validation, and tests.
+- `:core:designsystem` contains the shared Compose Material 3 theme.
+
+See `docs/architecture.md` for the dependency map and boundary rules.
+
 ## SDK Configuration
 
 The app is configured for the Acrobits assignment application ID
