@@ -34,3 +34,11 @@ SIP account credentials are entered in the app at runtime. For local QA, ignored
 defaultSipUsername=<sip-username>
 defaultSipPassword=<sip-password>
 ```
+
+## Manual Test Flow
+
+1. Install the app and grant microphone permission on the welcome screen.
+2. Enter one assigned SIP account in the app and tap `Register`.
+3. Wait until the registration indicator reads `Registered`.
+4. Log into CloudSoftphone on another device with the other assigned SIP account.
+5. Enter the other extension in the dialer and tap `Dial`.
