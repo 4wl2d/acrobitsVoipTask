@@ -28,6 +28,8 @@ acrobitsMavenPassword=<license-key>
 acrobitsLicenseKey=<license-key>
 ```
 
+`local.properties.example` contains a copyable template without secrets.
+
 SIP account credentials are entered in the app at runtime. For local QA, ignored
 Gradle properties can prefill the account form:
 
