@@ -93,6 +93,11 @@ class CallingViewModel(
     }
 
     fun onDialClicked() {
+        if (!_uiState.value.isRegistered) {
+            _uiState.update { it.copy(message = "Register SIP account before dialing.") }
+            return
+        }
+
         when (val validation = PhoneNumberValidator.validate(_uiState.value.phoneNumber)) {
             is PhoneNumberValidation.Invalid -> _uiState.update {
                 it.copy(phoneNumberError = validation.message)
