@@ -74,3 +74,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "AcrobitsVoip"
 include(":app")
+include(":core:designsystem")
+include(":core:voip")
+include(":feature:calling")
+include(":softphone:acrobits")
