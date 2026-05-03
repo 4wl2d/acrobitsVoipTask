@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "AcrobitsVoip"
+include(":app")
