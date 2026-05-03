@@ -1,5 +1,10 @@
 package com.tomilov.acrobitsvoip.feature.calling
 
+/**
+ * Semantics tags used by instrumentation tests.
+ *
+ * These are not stable feature API; production code should not depend on them.
+ */
 object CallingTestTags {
     const val WelcomePermissionButton = "welcome_permission_button"
     const val SipUsernameInput = "sip_username_input"
