@@ -32,6 +32,7 @@ class AcrobitsSoftphoneClient(
     private val accountId = "Test Account"
     private var currentCall: CallEvent? = null
     private var currentCallStartedAtMillis: Long? = null
+    private var currentDialedNumber: String? = null
 
     private val _registrationStatus = MutableStateFlow(RegistrationStatus.NotConfigured)
     override val registrationStatus: StateFlow<RegistrationStatus> = _registrationStatus
@@ -57,6 +58,7 @@ class AcrobitsSoftphoneClient(
 
         listeners.register(this)
         Instance.setObserver(listeners)
+        Instance.Registration.updateAll()
     }
 
     override fun configureAccount(credentials: SipCredentials) {
@@ -86,12 +88,14 @@ class AcrobitsSoftphoneClient(
         if (result != Instance.Events.PostResult.SUCCESS) {
             currentCall = null
             currentCallStartedAtMillis = null
+            currentDialedNumber = null
             _activeCall.value = null
             return CallPlacementResult.Failure("Call failed: $result")
         }
 
         currentCall = call
         currentCallStartedAtMillis = null
+        currentDialedNumber = number
         val session = call.toSession(Call.State.Trying)
         _activeCall.value = session
         return CallPlacementResult.Success(session)
@@ -135,6 +139,7 @@ class AcrobitsSoftphoneClient(
 
         currentCall = callEvent
         currentCallStartedAtMillis = null
+        currentDialedNumber = null
         updateCurrentCallSession()
     }
 
@@ -149,6 +154,7 @@ class AcrobitsSoftphoneClient(
             Instance.Calls.close(callEvent)
             currentCall = null
             currentCallStartedAtMillis = null
+            currentDialedNumber = null
             _activeCall.value = null
             return
         }
@@ -173,7 +179,7 @@ class AcrobitsSoftphoneClient(
         val remoteUser = remoteUser
         return CallSession(
             displayName = remoteUser?.displayName.orEmpty(),
-            number = remoteUser?.genericUri.orEmpty(),
+            number = currentDialedNumber ?: remoteUser?.genericUri.orEmpty(),
             stateLabel = state.label,
             startedAtMillis = currentCallStartedAtMillis,
             isMuted = Instance.Audio.isMuted(),
