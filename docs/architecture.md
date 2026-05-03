@@ -13,24 +13,23 @@ The project is split by responsibility instead of by technical layer names alone
 ## Dependency Direction
 
 ```text
-:app
-  -> :feature:calling
-  -> :softphone:acrobits
-  -> :core:designsystem
-  -> :core:voip
+:app -> :feature:calling
+:app -> :softphone:acrobits
+:app -> :core:designsystem
+:app -> :core:voip
 
-:feature:calling
-  -> :core:designsystem
-  -> :core:voip
+:feature:calling -> :core:designsystem
+:feature:calling -> :core:voip
 
-:softphone:acrobits
-  -> :core:voip
+:softphone:acrobits -> :core:voip
+```
 
-:core:designsystem
-  -> Compose Material 3
+External dependencies are separate from project-module dependencies:
 
-:core:voip
-  -> Kotlin/coroutines only
+```text
+:core:designsystem -> Compose Material 3
+:core:voip -> Kotlin/coroutines
+:softphone:acrobits -> Acrobits LibSoftphone
 ```
 
 The important rule is that dependencies point inward toward stable contracts. The UI depends on `SoftphoneClient`, not Acrobits. The app builds the concrete Acrobits client only at the edge.
