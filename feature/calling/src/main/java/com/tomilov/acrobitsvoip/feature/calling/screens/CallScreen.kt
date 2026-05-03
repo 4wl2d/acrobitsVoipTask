@@ -22,9 +22,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tomilov.acrobitsvoip.core.voip.CallSession
+import com.tomilov.acrobitsvoip.feature.calling.CallingTestTags
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,17 +83,21 @@ fun CallScreen(
                 FilterChip(
                     selected = call.isMuted,
                     onClick = { onMuteChanged(!call.isMuted) },
+                    modifier = Modifier.testTag(CallingTestTags.MuteButton),
                     label = { Text(if (call.isMuted) "Muted" else "Mute") }
                 )
                 FilterChip(
                     selected = call.isHeld,
                     onClick = { onHoldChanged(!call.isHeld) },
+                    modifier = Modifier.testTag(CallingTestTags.HoldButton),
                     label = { Text(if (call.isHeld) "On hold" else "Hold") }
                 )
             }
             Button(
                 onClick = onHangUp,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(CallingTestTags.HangUpButton),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.error,
                     contentColor = MaterialTheme.colorScheme.onError

@@ -24,9 +24,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.tomilov.acrobitsvoip.feature.calling.CallingTestTags
 import com.tomilov.acrobitsvoip.feature.calling.CallingUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -138,7 +140,9 @@ private fun AccountCard(
             OutlinedTextField(
                 value = sipUsername,
                 onValueChange = onSipUsernameChanged,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(CallingTestTags.SipUsernameInput),
                 label = { Text("Username") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -146,7 +150,9 @@ private fun AccountCard(
             OutlinedTextField(
                 value = sipPassword,
                 onValueChange = onSipPasswordChanged,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(CallingTestTags.SipPasswordInput),
                 label = { Text("Password") },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation()
@@ -154,7 +160,9 @@ private fun AccountCard(
             OutlinedButton(
                 onClick = onRegister,
                 enabled = canRegister,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(CallingTestTags.RegisterButton)
             ) {
                 Text("Register")
             }
@@ -178,7 +186,9 @@ private fun DialCard(
             OutlinedTextField(
                 value = phoneNumber,
                 onValueChange = onPhoneNumberChanged,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(CallingTestTags.PhoneNumberInput),
                 label = { Text("Telephone number") },
                 singleLine = true,
                 isError = phoneNumberError != null,
@@ -190,7 +200,9 @@ private fun DialCard(
             Button(
                 onClick = onDial,
                 enabled = canDial,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(CallingTestTags.DialButton)
             ) {
                 Text("Dial")
             }
