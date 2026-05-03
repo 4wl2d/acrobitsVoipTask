@@ -57,6 +57,14 @@ class PhoneNumberValidatorTest {
     }
 
     @Test
+    fun `rejects standalone plus`() {
+        assertEquals(
+            PhoneNumberValidation.Invalid("Enter digits after +."),
+            PhoneNumberValidator.validate("+")
+        )
+    }
+
+    @Test
     fun `rejects numbers longer than thirty two digits`() {
         assertEquals(
             PhoneNumberValidation.Invalid("Enter no more than 32 digits."),
