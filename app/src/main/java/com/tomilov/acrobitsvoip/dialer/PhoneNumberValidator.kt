@@ -26,9 +26,9 @@ object PhoneNumberValidator {
 
         val digitCount = normalizedNumber.count(Char::isDigit)
         return when {
+            normalizedNumber == "+" -> PhoneNumberValidation.Invalid("Enter digits after +.")
             digitCount < MIN_DIGITS -> PhoneNumberValidation.Invalid("Enter at least $MIN_DIGITS digits.")
             digitCount > MAX_DIGITS -> PhoneNumberValidation.Invalid("Enter no more than $MAX_DIGITS digits.")
-            normalizedNumber == "+" -> PhoneNumberValidation.Invalid("Enter digits after +.")
             else -> PhoneNumberValidation.Valid(normalizedNumber)
         }
     }
