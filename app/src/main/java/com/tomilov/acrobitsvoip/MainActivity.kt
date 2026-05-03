@@ -12,12 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tomilov.acrobitsvoip.di.AppContainer
 import com.tomilov.acrobitsvoip.ui.CallScreen
 import com.tomilov.acrobitsvoip.ui.DialerScreen
 import com.tomilov.acrobitsvoip.ui.VoipViewModel
@@ -37,10 +39,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun VoipApp(
-    viewModel: VoipViewModel = viewModel()
-) {
+private fun VoipApp() {
     val context = LocalContext.current
+    val services = remember { AppContainer.services }
+    val viewModel = viewModel<VoipViewModel>(
+        factory = VoipViewModel.Factory(services)
+    )
     var hasMicrophonePermission by rememberSaveable {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
