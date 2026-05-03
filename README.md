@@ -13,6 +13,21 @@ Android project scaffold for the Acrobits VoIP task.
 ./gradlew build
 ```
 
+## Verification
+
+Run local unit and architecture checks:
+
+```bash
+./gradlew checkArchitecture :core:voip:test :feature:calling:testDebugUnitTest --no-daemon
+```
+
+Run the Compose click tests on a connected Android device or emulator:
+
+```bash
+adb devices
+./gradlew :feature:calling:connectedDebugAndroidTest --no-daemon
+```
+
 ## Architecture
 
 The app is organized as a small multi-module Android project:

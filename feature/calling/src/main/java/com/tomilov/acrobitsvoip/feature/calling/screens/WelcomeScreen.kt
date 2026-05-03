@@ -15,8 +15,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.tomilov.acrobitsvoip.feature.calling.CallingTestTags
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +51,10 @@ fun WelcomeScreen(
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(24.dp))
-            Button(onClick = onRequestMicrophonePermission) {
+            Button(
+                onClick = onRequestMicrophonePermission,
+                modifier = Modifier.testTag(CallingTestTags.WelcomePermissionButton)
+            ) {
                 Text(
                     if (permissionRequested) {
                         "Grant microphone permission"
