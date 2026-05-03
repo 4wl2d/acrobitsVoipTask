@@ -2,9 +2,10 @@ package com.tomilov.acrobitsvoip.di
 
 import android.app.Application
 import com.tomilov.acrobitsvoip.BuildConfig
-import com.tomilov.acrobitsvoip.config.VoipConfig
-import com.tomilov.acrobitsvoip.voip.AcrobitsSoftphoneClient
-import com.tomilov.acrobitsvoip.voip.SoftphoneClient
+import com.tomilov.acrobitsvoip.core.voip.SoftphoneClient
+import com.tomilov.acrobitsvoip.core.voip.VoipConfig
+import com.tomilov.acrobitsvoip.softphone.acrobits.AcrobitsSoftphoneConfig
+import com.tomilov.acrobitsvoip.softphone.acrobits.createAcrobitsSoftphoneClient
 
 object AppContainer {
     private var initializedServices: AppServices? = null
@@ -17,7 +18,14 @@ object AppContainer {
     fun initialize(application: Application) {
         if (initializedServices != null) return
         initializedServices = AppServices(
-            softphoneClient = AcrobitsSoftphoneClient(application),
+            softphoneClient = createAcrobitsSoftphoneClient(
+                application = application,
+                config = AcrobitsSoftphoneConfig(
+                    licenseKey = BuildConfig.ACROBITS_LICENSE_KEY,
+                    sipHost = BuildConfig.SIP_HOST,
+                    trafficLoggingEnabled = BuildConfig.DEBUG
+                )
+            ),
             voipConfig = VoipConfig(
                 sipHost = BuildConfig.SIP_HOST,
                 defaultSipUsername = BuildConfig.DEFAULT_SIP_USERNAME,
