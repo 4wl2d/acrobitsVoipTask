@@ -69,6 +69,11 @@ android {
         buildConfig = true
         compose = true
     }
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
 }
 
 dependencies {
