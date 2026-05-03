@@ -1,9 +1,40 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
 
 fun String.toBuildConfigString(): String = "\"" + replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.isFile) {
+        file.inputStream().use { load(it) }
+    }
+}
+
+fun configValue(
+    gradlePropertyName: String,
+    environmentVariableName: String
+): String = providers.gradleProperty(gradlePropertyName)
+    .orElse(providers.environmentVariable(environmentVariableName))
+    .orElse(localProperties.getProperty(gradlePropertyName) ?: "")
+    .get()
+
+fun requiredConfigValue(
+    gradlePropertyName: String,
+    environmentVariableName: String,
+    displayName: String
+): String = configValue(gradlePropertyName, environmentVariableName).also { value ->
+    if (value.isBlank()) {
+        throw GradleException(
+            "Missing $displayName. Set $gradlePropertyName in local.properties or " +
+                "~/.gradle/gradle.properties, pass -P$gradlePropertyName=..., or set " +
+                "$environmentVariableName."
+        )
+    }
+}
 
 android {
     namespace = "com.tomilov.acrobitsvoip"
@@ -24,29 +55,30 @@ android {
         buildConfigField(
             "String",
             "ACROBITS_LICENSE_KEY",
-            providers.gradleProperty("acrobitsLicenseKey")
-                .orElse(providers.environmentVariable("ACROBITS_LICENSE_KEY"))
-                .orElse("")
-                .get()
+            requiredConfigValue(
+                gradlePropertyName = "acrobitsLicenseKey",
+                environmentVariableName = "ACROBITS_LICENSE_KEY",
+                displayName = "Acrobits runtime license key"
+            )
                 .toBuildConfigString()
         )
         buildConfigField("String", "SIP_HOST", "pbx.acrobits.cz".toBuildConfigString())
         buildConfigField(
             "String",
             "DEFAULT_SIP_USERNAME",
-            providers.gradleProperty("defaultSipUsername")
-                .orElse(providers.environmentVariable("DEFAULT_SIP_USERNAME"))
-                .orElse("")
-                .get()
+            configValue(
+                gradlePropertyName = "defaultSipUsername",
+                environmentVariableName = "DEFAULT_SIP_USERNAME"
+            )
                 .toBuildConfigString()
         )
         buildConfigField(
             "String",
             "DEFAULT_SIP_PASSWORD",
-            providers.gradleProperty("defaultSipPassword")
-                .orElse(providers.environmentVariable("DEFAULT_SIP_PASSWORD"))
-                .orElse("")
-                .get()
+            configValue(
+                gradlePropertyName = "defaultSipPassword",
+                environmentVariableName = "DEFAULT_SIP_PASSWORD"
+            )
                 .toBuildConfigString()
         )
     }
