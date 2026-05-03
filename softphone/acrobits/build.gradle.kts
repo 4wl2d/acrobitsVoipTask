@@ -27,7 +27,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:voip"))
+    api(project(":core:voip"))
 
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.libsoftphone)
